@@ -1,0 +1,43 @@
+* {
+  font-family: sans-serif;
+}
+
+input,
+button {
+  font-size: 20px;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+input {
+  display: block;
+  margin-bottom: 20px;
+}
+
+button {
+  border: 1px solid gray;
+  background: whitesmoke;
+  margin-right: 5px;
+}
+
+button:nth-last-child(2),
+button:nth-last-child(1) {
+  background: tomato;
+  color: white;
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+button:hover {
+  cursor: pointer;
+  background-color: rgba(0, 0, 0, 0.195);
+}
+
+button:nth-last-child(2):hover,
+button:nth-last-child(1):hover {
+  background: rgb(221, 43, 11);
+}
