@@ -1,0 +1,30 @@
+.card {
+    display: flex;
+    flex-direction: row;
+    background-color: #FFA726;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    position: relative;
+    margin: 0px 20px 20px 0px;
+}
+
+.info {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 50%;
+    color: white;
+}
+
+.card-loading {
+    display: flex;
+    flex-direction: row;
+    background-color: #ffa8260a;
+    border-radius: 10px;
+    padding: 20px;
+    width: 300px;
+    position: relative;
+    overflow: hidden;
+}
