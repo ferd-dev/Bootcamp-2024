@@ -1,0 +1,15 @@
+.image {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    width: 50%;
+    position: absolute;
+    top: -15px;
+    right: -45px;
+}
+
+.image img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+}
