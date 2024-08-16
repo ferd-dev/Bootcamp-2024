@@ -50,12 +50,18 @@ const Product = ({ id, name, availableCount, price, orderedQuantity, total, addC
       <td>{availableCount}</td>
       <td>${price}</td>
       <td>{orderedQuantity}</td>
-      <td>${total}</td>
+      <td>${total.toFixed(2)}</td>
       <td>
-        <button className={styles.actionButton}
-          onClick={() => addCuant(id)}>+</button>
-        <button className={styles.actionButton}
-          onClick={() => removeCuant(id)}>-</button>
+        <button
+          className={styles.actionButton}
+          onClick={() => addCuant(id)}
+          disabled={orderedQuantity >= 5 || orderedQuantity >= availableCount}
+        >+</button>
+        <button
+          className={styles.actionButton}
+          onClick={() => removeCuant(id)}
+          disabled={orderedQuantity <= 0 || orderedQuantity >= availableCount}
+        >-</button>
       </td>
     </tr >
   );
@@ -63,13 +69,14 @@ const Product = ({ id, name, availableCount, price, orderedQuantity, total, addC
 
 const Checkout = () => {
   const [products, setProducts] = useState<ProductBody[]>([]);
-  // const [discount, setDiscount] = useState(0);
-  // const [total, setTotal] = useState(0);
+  const [discount, setDiscount] = useState(0);
+  const [total, setTotal] = useState(0);
 
   const addCuant = (id: number) => {
     console.log(id);
     const newProducts = products.map((product) => {
       if (product.id === id) {
+        setTotal(total + product.price);
         return {
           ...product,
           orderedQuantity: product.orderedQuantity + 1,
@@ -85,6 +92,7 @@ const Checkout = () => {
   const removeCuant = (id: number) => {
     const newProducts = products.map((product) => {
       if (product.id === id) {
+        setTotal(total - product.price);
         return {
           ...product,
           orderedQuantity: product.orderedQuantity - 1,
@@ -149,8 +157,8 @@ const Checkout = () => {
           }
         </table>
         <h2>Order summary</h2>
-        <p>Discount: $ </p>
-        <p>Total: 0$ </p>
+        <p>Discount: {discount}$ </p>
+        <p>Total: {total.toFixed(2)}$ </p>
       </main>
     </div>
   );
