@@ -24,8 +24,10 @@ import { getProducts } from './dataService';
 type ProductBody = {
   id: number;
   name: string;
-  price: number;
   availableCount: number;
+  price: number;
+  orderedQuantity: number;
+  total: number;
 };
 
 type Props = {
@@ -35,9 +37,12 @@ type Props = {
   price: number;
   orderedQuantity: number;
   total: number;
+  addCuant: (id: number) => void;
+  removeCuant: (id: number) => void;
 };
 
-const Product = ({ id, name, availableCount, price, orderedQuantity, total }: Props) => {
+
+const Product = ({ id, name, availableCount, price, orderedQuantity, total, addCuant, removeCuant }: Props) => {
   return (
     <tr>
       <td>{id}</td>
@@ -47,16 +52,49 @@ const Product = ({ id, name, availableCount, price, orderedQuantity, total }: Pr
       <td>{orderedQuantity}</td>
       <td>${total}</td>
       <td>
-        <button className={styles.actionButton}>+</button>
-        <button className={styles.actionButton}>-</button>
+        <button className={styles.actionButton}
+          onClick={() => addCuant(id)}>+</button>
+        <button className={styles.actionButton}
+          onClick={() => removeCuant(id)}>-</button>
       </td>
-    </tr>
+    </tr >
   );
 }
 
-
 const Checkout = () => {
   const [products, setProducts] = useState<ProductBody[]>([]);
+  // const [discount, setDiscount] = useState(0);
+  // const [total, setTotal] = useState(0);
+
+  const addCuant = (id: number) => {
+    console.log(id);
+    const newProducts = products.map((product) => {
+      if (product.id === id) {
+        return {
+          ...product,
+          orderedQuantity: product.orderedQuantity + 1,
+          total: (product.orderedQuantity + 1) * product.price,
+        };
+      }
+      return product;
+    });
+    console.log(newProducts);
+    setProducts(newProducts);
+  }
+
+  const removeCuant = (id: number) => {
+    const newProducts = products.map((product) => {
+      if (product.id === id) {
+        return {
+          ...product,
+          orderedQuantity: product.orderedQuantity - 1,
+          total: (product.orderedQuantity - 1) * product.price,
+        };
+      }
+      return product;
+    });
+    setProducts(newProducts);
+  }
 
   useEffect(() => {
     getProducts().then((data) => {
@@ -65,7 +103,6 @@ const Checkout = () => {
         orderedQuantity: 0,
         total: 0,
       }));
-
       setProducts(initialProducts);
     });
   }, []);
@@ -75,7 +112,9 @@ const Checkout = () => {
         <h1>Electro World</h1>
       </header>
       <main>
-        <LoadingIcon />
+        {
+          products.length === 0 && <LoadingIcon />
+        }
         <table className={styles.table}>
           <thead>
             <tr>
@@ -89,24 +128,29 @@ const Checkout = () => {
               <th></th>
             </tr>
           </thead>
-          <tbody>
-            {/* id, name, availableCount, price, orderedQuantity, total */}
-            {products.map((product) => (
-              <Product
-                key={product.id}
-                id={product.id}
-                name={product.name}
-                availableCount={product.availableCount}
-                price={product.price}
-                orderedQuantity={0}
-                total={0}
-              />
-            ))}
-          </tbody>
+          {
+            products.length !== 0
+            &&
+            <tbody>
+              {products.map((product) => (
+                <Product
+                  key={product.id}
+                  id={product.id}
+                  name={product.name}
+                  availableCount={product.availableCount}
+                  price={product.price}
+                  orderedQuantity={product.orderedQuantity}
+                  total={product.total}
+                  addCuant={addCuant}
+                  removeCuant={removeCuant}
+                />
+              ))}
+            </tbody>
+          }
         </table>
         <h2>Order summary</h2>
         <p>Discount: $ </p>
-        <p>Total: $ </p>
+        <p>Total: 0$ </p>
       </main>
     </div>
   );
