@@ -1,6 +1,7 @@
+import { useEffect, useState } from 'react';
 import styles from './Checkout.module.css';
 import { LoadingIcon } from './Icons';
-// import { getProducts } from './dataService';
+import { getProducts } from './dataService';
 
 // You are provided with an incomplete <Checkout /> component.
 // You are not allowed to add any additional HTML elements.
@@ -20,34 +21,61 @@ import { LoadingIcon } from './Icons';
 //  - The total should reflect any discount that has been applied
 //  - All dollar amounts should be displayed to 2 decimal places
 
+type ProductBody = {
+  id: number;
+  name: string;
+  price: number;
+  availableCount: number;
+};
 
+type Props = {
+  id: number;
+  name: string;
+  availableCount: number;
+  price: number;
+  orderedQuantity: number;
+  total: number;
+};
 
-const Product = ({ id, name, availableCount, price, orderedQuantity, total }) => {
+const Product = ({ id, name, availableCount, price, orderedQuantity, total }: Props) => {
   return (
     <tr>
       <td>{id}</td>
       <td>{name}</td>
       <td>{availableCount}</td>
       <td>${price}</td>
-      <td>{orderedQuantity}</td>   
+      <td>{orderedQuantity}</td>
       <td>${total}</td>
       <td>
         <button className={styles.actionButton}>+</button>
         <button className={styles.actionButton}>-</button>
       </td>
-    </tr>    
+    </tr>
   );
 }
 
 
 const Checkout = () => {
+  const [products, setProducts] = useState<ProductBody[]>([]);
+
+  useEffect(() => {
+    getProducts().then((data) => {
+      const initialProducts = data.map((product) => ({
+        ...product,
+        orderedQuantity: 0,
+        total: 0,
+      }));
+
+      setProducts(initialProducts);
+    });
+  }, []);
   return (
     <div>
-      <header className={styles.header}>        
-        <h1>Electro World</h1>        
+      <header className={styles.header}>
+        <h1>Electro World</h1>
       </header>
       <main>
-        <LoadingIcon />        
+        <LoadingIcon />
         <table className={styles.table}>
           <thead>
             <tr>
@@ -62,12 +90,23 @@ const Checkout = () => {
             </tr>
           </thead>
           <tbody>
-          {/* Products should be rendered here */}
+            {/* id, name, availableCount, price, orderedQuantity, total */}
+            {products.map((product) => (
+              <Product
+                key={product.id}
+                id={product.id}
+                name={product.name}
+                availableCount={product.availableCount}
+                price={product.price}
+                orderedQuantity={0}
+                total={0}
+              />
+            ))}
           </tbody>
         </table>
         <h2>Order summary</h2>
         <p>Discount: $ </p>
-        <p>Total: $ </p>       
+        <p>Total: $ </p>
       </main>
     </div>
   );
